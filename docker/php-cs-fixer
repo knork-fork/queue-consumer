@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+docker exec -it queuer-php-fpm \
+    /application/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix \
+    --allow-risky=yes --verbose --show-progress dots "$@" \
+    | grep -v 'You can enable parallel runner and speed up the analysis!'

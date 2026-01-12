@@ -1,0 +1,29 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: '3.1'
+services:
+    webserver:
+        container_name: queuer-webserver
+        restart: unless-stopped
+        image: 'nginx:alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+            - ./var/logs/nginx:/var/log/nginx
+        ports:
+            - '20008:80'
+
+    php-fpm:
+        container_name: queuer-php-fpm
+        restart: unless-stopped
+        build: phpdocker/php-fpm
+        working_dir: /application
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        volumes:
+            - '.:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
+            - ./var/logs/php-fpm:/var/log
