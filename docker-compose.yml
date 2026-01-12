@@ -15,6 +15,13 @@ services:
         ports:
             - '20008:80'
 
+    # Broker
+    rabbitmq:
+        container_name: queue-consumer-rabbitmq
+        restart: unless-stopped
+        image: rabbitmq:latest
+
+    # Consumer
     php-fpm:
         container_name: queue-consumer-php-fpm
         restart: unless-stopped
@@ -27,3 +34,14 @@ services:
             - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
             - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
             - ./var/logs/php-fpm:/var/log
+
+    # Acts as dedicated processing service (Executor)
+    # From host: curl http://localhost:20009
+    # From container: curl http://queue-consumer-dummy-response:5678
+    dummy-response:
+        container_name: queue-consumer-dummy-response
+        restart: unless-stopped
+        image: hashicorp/http-echo:latest
+        command: ["-listen=:5678", "-text=hello world"]
+        ports:
+            - '20009:5678'
