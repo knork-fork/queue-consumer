@@ -4,7 +4,7 @@
 version: '3.1'
 services:
     webserver:
-        container_name: queuer-webserver
+        container_name: queue-consumer-webserver
         image: 'nginx:alpine'
         working_dir: /application
         volumes:
@@ -15,7 +15,7 @@ services:
             - '20008:80'
 
     php-fpm:
-        container_name: queuer-php-fpm
+        container_name: queue-consumer-php-fpm
         build: phpdocker/php-fpm
         working_dir: /application
         volumes:
