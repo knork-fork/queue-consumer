@@ -18,4 +18,4 @@ framework:
             # failed: '%env(MESSENGER_TRANSPORT_DSN)%/failed'
 
         routing:
-            App\Message\Ping: async
+            App\Example\Message\Ping: async
