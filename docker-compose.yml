@@ -1,28 +1,19 @@
 ###############################################################################
 #                          Generated on phpdocker.io                          #
 ###############################################################################
-version: '3.1'
+#version: '3.1'
 services:
-    webserver:
-        container_name: queue-consumer-webserver
-        restart: unless-stopped
-        image: 'nginx:alpine'
-        working_dir: /application
-        volumes:
-            - '.:/application'
-            - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
-            - ./var/logs/nginx:/var/log/nginx
-        ports:
-            - '20008:80'
-
     # Broker
     rabbitmq:
         container_name: queue-consumer-rabbitmq
         restart: unless-stopped
         image: rabbitmq:latest
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbitmquser
+            RABBITMQ_DEFAULT_PASS: rabbitmqpass
 
     # Consumer
-    php-fpm:
+    consumer:
         container_name: queue-consumer-php-fpm
         restart: unless-stopped
         build: phpdocker/php-fpm
@@ -43,5 +34,3 @@ services:
         restart: unless-stopped
         image: hashicorp/http-echo:latest
         command: ["-listen=:5678", "-text=hello world"]
-        ports:
-            - '20009:5678'

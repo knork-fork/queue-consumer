@@ -426,7 +426,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         resources?: array<string, scalar|null|Param>,
  *     },
  *     messenger?: bool|array{ // Messenger configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         routing?: array<string, array{ // Default: []
  *             senders?: list<scalar|null|Param>,
  *         }>,

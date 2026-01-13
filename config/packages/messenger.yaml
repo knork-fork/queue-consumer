@@ -1,0 +1,21 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        #failure_transport: failed
+
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 60000
+
+            # To save failed messages to the database
+            #failed: 'doctrine://default?queue_name=failed'
+            # To save failed messages to RabbitMQ
+            # failed: '%env(MESSENGER_TRANSPORT_DSN)%/failed'
+
+        routing:
+            App\Message\Ping: async
