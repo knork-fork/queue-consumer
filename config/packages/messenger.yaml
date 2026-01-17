@@ -19,3 +19,4 @@ framework:
 
         routing:
             App\Example\Message\Ping: async
+            App\Message\GenericMessage: async

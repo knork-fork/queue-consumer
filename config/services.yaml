@@ -25,3 +25,8 @@ services:
     App\Config\JobConfigResolver:
         arguments:
             $env: '%kernel.environment%'
+
+    # Default implementations for interfaces
+    App\Message\JobValidationProbeInterface: '@App\Message\NullJobValidationProbe'
+
+    App\Message\NullJobValidationProbe: ~
