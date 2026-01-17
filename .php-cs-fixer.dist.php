@@ -6,7 +6,7 @@ $finder = (new PhpCsFixer\Finder())
     ->path('config')
     ->path('public')
     ->path('src')
-    //->path('tests')
+    ->path('tests')
     ->exclude(['var', 'vendor'])
     ->notPath('config/reference.php')
 ;

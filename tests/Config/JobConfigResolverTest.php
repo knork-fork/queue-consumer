@@ -7,8 +7,12 @@ use App\Config\JobConfigResolver;
 use App\Message\GenericMessage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class JobConfigResolverTest extends TestCase
+/**
+ * @internal
+ */
+final class JobConfigResolverTest extends TestCase
 {
     private JobConfigResolver $jobConfigResolver;
 
@@ -19,7 +23,7 @@ class JobConfigResolverTest extends TestCase
 
     public function testGetJobByNameForUndefinedJobThrowsException(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Job config not found for job name: undefined-job-name');
         $this->jobConfigResolver->getJobByName('undefined-job-name');
     }
@@ -43,9 +47,9 @@ class JobConfigResolverTest extends TestCase
         self::assertSame('test-job-post-mixed-inputs', $job->name);
         self::assertSame('POST', $job->method);
         self::assertSame('http://also.not.a.real.url.com', $job->url);
-        self::assertSame(["query_url_key", "another_query_key"], $job->queryUrlKeys);
-        self::assertSame(["json_1", "json_2", "json_3"], $job->jsonBodyKeys);
-        self::assertSame(["query_url_key", "json_1", "json_2"], $job->requiredInputKeys);
+        self::assertSame(['query_url_key', 'another_query_key'], $job->queryUrlKeys);
+        self::assertSame(['json_1', 'json_2', 'json_3'], $job->jsonBodyKeys);
+        self::assertSame(['query_url_key', 'json_1', 'json_2'], $job->requiredInputKeys);
         self::assertSame('test', $job->logSuffix);
         self::assertSame(201, $job->successStatusCode);
     }
@@ -53,7 +57,7 @@ class JobConfigResolverTest extends TestCase
     /**
      * @param array<string, mixed> $payload
      */
-    #[DataProvider('getValidPayloads')]
+    #[DataProvider('provideCheckIfMessagePayloadMatchesJobConfigForValidPayloadsReturnsTrueCases')]
     public function testCheckIfMessagePayloadMatchesJobConfigForValidPayloadsReturnsTrue(string $jobName, array $payload): void
     {
         $message = new GenericMessage($jobName, $payload);
@@ -66,7 +70,7 @@ class JobConfigResolverTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public static function getValidPayloads(): array
+    public static function provideCheckIfMessagePayloadMatchesJobConfigForValidPayloadsReturnsTrueCases(): iterable
     {
         return [
             ['test-job-no-input', []],
@@ -85,10 +89,10 @@ class JobConfigResolverTest extends TestCase
         ];
     }
 
-     /**
+    /**
      * @param array<string, mixed> $payload
      */
-    #[DataProvider('getInvalidPayloads')]
+    #[DataProvider('provideCheckIfMessagePayloadMatchesJobConfigForInvalidPayloadsReturnsFalseCases')]
     public function testCheckIfMessagePayloadMatchesJobConfigForInvalidPayloadsReturnsFalse(string $jobName, array $payload): void
     {
         $message = new GenericMessage($jobName, $payload);
@@ -101,7 +105,7 @@ class JobConfigResolverTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public static function getInvalidPayloads(): array
+    public static function provideCheckIfMessagePayloadMatchesJobConfigForInvalidPayloadsReturnsFalseCases(): iterable
     {
         return [
             // Invalid job name

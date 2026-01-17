@@ -1,13 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Tests\MessageHandler;
 
-use App\Message\JobValidationProbe;
 use App\Message\GenericMessage;
+use App\Message\JobValidationProbe;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
-use Symfony\Component\Messenger\Transport\TransportInterface;
 
+/**
+ * @internal
+ */
 final class GenericMessageHandlerTest extends KernelTestCase
 {
     public function testJobWithNoPayloadIsAccepted(): void
