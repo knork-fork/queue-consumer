@@ -1,0 +1,18 @@
+jobs:
+    # job name
+    dummy-response-retrieval:
+        request:
+            method: POST
+            url: http://dummy-response:5678
+            # define which input keys go to query string and which to JSON body
+            #   available options:
+            #     [] = send nothing
+            #     [list of keys] = send these keys
+            query_url_from: ["query_url_key", "another_query_key"]
+            json_body_from: ["json_1", "json_2", "json_3"]
+            # define which input keys are required and which are optional
+            required: ["query_url_key", "json_1", "json_2"]
+        log_suffix: dummy_response
+        success:
+            # expected HTTP status code for a successful job
+            status_code: 200

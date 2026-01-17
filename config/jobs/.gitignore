@@ -1,0 +1,5 @@
+# Ignore everything but default.yaml and test.yaml
+*
+!default.yaml
+!test.yaml
+!.gitignore

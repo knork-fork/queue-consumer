@@ -1,0 +1,22 @@
+jobs:
+    test-job-no-input:
+        request:
+            method: GET
+            url: http://not.a.real.url.com
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+
+    test-job-post-mixed-inputs:
+        request:
+            method: POST
+            url: http://also.not.a.real.url.com
+            query_url_from: ["query_url_key", "another_query_key"]
+            json_body_from: ["json_1", "json_2", "json_3"]
+            required: ["query_url_key", "json_1", "json_2"]
+        log_suffix: test
+        success:
+            status_code: 201
