@@ -14,6 +14,7 @@ use RuntimeException;
  */
 final class JobConfigResolverTest extends TestCase
 {
+    /* @phpstan-ignore-next-line PHPStan is lying about this property not being initialized because it doesn't see setUp() */
     private JobConfigResolver $jobConfigResolver;
 
     protected function setUp(): void

@@ -6,6 +6,7 @@ namespace App\Tests\MessageHandler;
 use App\Message\GenericMessage;
 use App\Message\JobValidationProbe;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
@@ -16,6 +17,7 @@ final class GenericMessageHandlerTest extends KernelTestCase
     public function testJobWithNoPayloadIsAccepted(): void
     {
         self::bootKernel();
+        /** @var MessageBus */
         $bus = self::getContainer()->get(MessageBusInterface::class);
 
         $bus->dispatch(new GenericMessage(
@@ -35,6 +37,7 @@ final class GenericMessageHandlerTest extends KernelTestCase
     public function testValidPayloadIsAccepted(): void
     {
         self::bootKernel();
+        /** @var MessageBus */
         $bus = self::getContainer()->get(MessageBusInterface::class);
 
         $bus->dispatch(new GenericMessage(
@@ -52,12 +55,16 @@ final class GenericMessageHandlerTest extends KernelTestCase
         self::assertSame(1, $probe->ok);
         self::assertSame(0, $probe->failed);
         self::assertSame('test-job-post-mixed-inputs', $probe->last['jobName']);
+
+        self::assertIsArray($probe->last['payload']);
+        self::assertArrayHasKey('query_url_key', $probe->last['payload']);
         self::assertSame('value1', $probe->last['payload']['query_url_key']);
     }
 
     public function testPayloadWithMissingFieldsFails(): void
     {
         self::bootKernel();
+        /** @var MessageBus */
         $bus = self::getContainer()->get(MessageBusInterface::class);
 
         $bus->dispatch(new GenericMessage(
