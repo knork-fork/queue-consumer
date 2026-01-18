@@ -36,9 +36,6 @@ final class GenericMessageHandler
             return;
         }
 
-        // TO-DO: curl here to the defined URL with defined method, query params and JSON body
-
-        $this->probe->ok($m->jobName, $m->payload);
-        Logger::info("Processed Generic Message successfully: jobName={$m->jobName}, payload=" . json_encode($m->payload), $job->logSuffix);
+        $job->do($this->probe, $m->payload);
     }
 }

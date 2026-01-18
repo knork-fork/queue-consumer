@@ -34,7 +34,7 @@ final class JobConfigResolverTest extends TestCase
         $job = $this->jobConfigResolver->getJobByName('test-job-no-input');
         self::assertSame('test-job-no-input', $job->name);
         self::assertSame('GET', $job->method);
-        self::assertSame('http://not.a.real.url.com', $job->url);
+        self::assertSame('http://queue-consumer-dummy-response:5678', $job->url);
         self::assertSame([], $job->queryUrlKeys);
         self::assertSame([], $job->jsonBodyKeys);
         self::assertSame([], $job->requiredInputKeys);
@@ -47,12 +47,12 @@ final class JobConfigResolverTest extends TestCase
         $job = $this->jobConfigResolver->getJobByName('test-job-post-mixed-inputs');
         self::assertSame('test-job-post-mixed-inputs', $job->name);
         self::assertSame('POST', $job->method);
-        self::assertSame('http://also.not.a.real.url.com', $job->url);
+        self::assertSame('http://queue-consumer-dummy-response:5678', $job->url);
         self::assertSame(['query_url_key', 'another_query_key'], $job->queryUrlKeys);
         self::assertSame(['json_1', 'json_2', 'json_3'], $job->jsonBodyKeys);
         self::assertSame(['query_url_key', 'json_1', 'json_2'], $job->requiredInputKeys);
         self::assertSame('test', $job->logSuffix);
-        self::assertSame(201, $job->successStatusCode);
+        self::assertSame(200, $job->successStatusCode);
     }
 
     /**

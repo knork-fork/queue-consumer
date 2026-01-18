@@ -5,6 +5,7 @@ namespace App\Tests\MessageHandler;
 
 use App\Job\JobValidationProbe;
 use App\Message\GenericMessage;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -82,5 +83,30 @@ final class GenericMessageHandlerTest extends KernelTestCase
         self::assertSame(0, $probe->ok);
         self::assertSame(1, $probe->failed);
         self::assertSame('Payload does not match job config', $probe->last['reason']);
+    }
+
+    public function testWrongStatusCodeFails(): void
+    {
+        self::bootKernel();
+        /** @var MessageBus */
+        $bus = self::getContainer()->get(MessageBusInterface::class);
+
+        try {
+            $bus->dispatch(new GenericMessage(
+                jobName: 'test-job-wrong-status-code',
+                payload: []
+            ));
+
+            self::fail('Expected RuntimeException was not thrown');
+        } catch (RuntimeException $e) {
+            self::assertStringContainsString('Job request failed', $e->getMessage());
+        }
+
+        /** @var JobValidationProbe $probe */
+        $probe = self::getContainer()->get(JobValidationProbe::class);
+
+        self::assertSame(0, $probe->ok);
+        self::assertSame(1, $probe->failed);
+        self::assertSame('Request failed', $probe->last['reason']);
     }
 }
