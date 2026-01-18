@@ -127,3 +127,9 @@ The consumer remains generic:
 * checks `success.status_code`
 
 No job code is added to the consumer. Only YAML changes.
+
+## Deployment tips
+
+Either add this repo as a submodule to your project, or build an image and push it to your registry.
+
+Mount a custom and tracked `config/jobs/` directory with your job YAML files into the container at runtime.
