@@ -6,6 +6,13 @@ framework:
         transports:
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: jobs
+                        type: topic
+                    queues:
+                        '%env(CONSUMER_QUEUE_NAME)%':
+                            binding_keys: '%env(json:CONSUMER_BINDING_KEYS)%'
                 retry_strategy:
                     max_retries: 5
                     delay: 1000

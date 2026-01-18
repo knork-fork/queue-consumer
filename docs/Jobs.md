@@ -115,7 +115,7 @@ $bus->dispatch(new GenericMessage(
         'file_id' => 'abc',
         'mode' => 'fast',
     ]
-));
+), [new AmqpStamp('routing.key.for.my.job')]);
 ```
 
 The consumer remains generic:
