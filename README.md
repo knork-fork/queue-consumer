@@ -1,5 +1,9 @@
 # Generic Queueing Consumer
 
+<video src="https://github.com/user-attachments/assets/b7bd0019-d35c-454d-83a0-2acffd2c80c0"
+       autoplay loop muted playsinline>
+</video>
+
 Generic queueing service consumer for background processing.
 
 This service consumes messages from a queue and executes jobs **purely based on configuration**.  
