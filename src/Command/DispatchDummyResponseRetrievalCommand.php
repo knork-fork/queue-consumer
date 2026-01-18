@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpStamp;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-// Try out with: docker-compose exec consumer php bin/console app:dispatch-dummy-response
+// Try out with: docker exec queue-consumer-php-fpm php bin/console app:dispatch-dummy-response
 // tail -f var/logs/php-fpm/php_dummy_response.log to see output
 #[AsCommand(name: 'app:dispatch-dummy-response')]
 final class DispatchDummyResponseRetrievalCommand extends Command
