@@ -75,6 +75,8 @@ final class Job
             \CURLOPT_CUSTOMREQUEST => $method,
             \CURLOPT_POSTFIELDS => $this->buildPostBody($payload),
             \CURLOPT_HTTPHEADER => $headers,
+            // Infinite timeout
+            \CURLOPT_TIMEOUT => 0,
         ]);
 
         $result = curl_exec($ch);
