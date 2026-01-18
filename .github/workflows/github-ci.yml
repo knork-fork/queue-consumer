@@ -14,10 +14,10 @@ jobs:
       run: docker compose -f docker-compose.cicd.yml up -d --build
 
     - name: Install Composer dependencies
-      run: docker exec queue-consumer-php-fpm composer install --no-interaction
+      run: docker compose -f docker-compose.cicd.yml run --rm consumer composer install --no-interaction
     
     - name: Run PHPStan
-      run: docker exec queue-consumer-php-fpm vendor/phpstan/phpstan/phpstan
+      run: docker compose -f docker-compose.cicd.yml run --rm consumer vendor/phpstan/phpstan/phpstan
 
     - name: Run PHP-CS-Fixer
-      run: docker exec queue-consumer-php-fpm vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --diff --allow-risky=yes --verbose --show-progress dots
+      run: docker compose -f docker-compose.cicd.yml run --rm consumer vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --diff --allow-risky=yes --verbose --show-progress dots
