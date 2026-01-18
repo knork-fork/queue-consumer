@@ -11,7 +11,7 @@ Jobs are defined via YAML configuration and dispatched by **another container/se
 
 ## How it works (high level)
 
-- A **producer** (separate container/service) dispatches a `GenericMessage(jobName, payload)` via Symfony Messenger.
+- A **producer** (separate container/service) dispatches a `GenericMessage(jobName, payload)` via e.g. Symfony Messenger.
 - This consumer:
   - loads job definitions from `config/jobs/*.yaml`
   - validates the payload against the job definition
@@ -28,6 +28,13 @@ Jobs are defined in YAML under `config/jobs/`.
 
 See detailed documentation here:  
 - **[`docs/Jobs.md`](docs/Jobs.md)**
+
+## Routing configuration
+
+Jobs can be routed to different consumer instances based on routing keys.
+
+See detailed documentation here:  
+- **[`docs/Queue routing.md`](docs/Queue%20routing.md)**
 
 ---
 
