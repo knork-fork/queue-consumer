@@ -1,0 +1,25 @@
+services:
+    # Consumer
+    consumer:
+        container_name: queue-consumer-php-fpm
+        restart: unless-stopped
+        build: phpdocker/php-fpm
+        working_dir: /application
+        environment:
+            MESSENGER_TRANSPORT_DSN: in-memory://
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        volumes:
+            - '.:/application'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
+            - ./var/logs/php-fpm:/var/log
+
+    # Acts as dedicated processing service (Executor)
+    # From host: curl http://localhost:20009
+    # From container: curl http://queue-consumer-dummy-response:5678
+    dummy-response:
+        container_name: queue-consumer-dummy-response
+        restart: unless-stopped
+        image: hashicorp/http-echo:latest
+        command: ["-listen=:5678", "-text=hello world"]
