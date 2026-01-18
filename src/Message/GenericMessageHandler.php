@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\MessageHandler;
+namespace App\Message;
 
 use App\Config\JobConfigResolver;
+use App\Job\JobValidationProbeInterface;
 use App\Logger;
-use App\Message\GenericMessage;
-use App\Message\JobValidationProbeInterface;
 use RuntimeException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

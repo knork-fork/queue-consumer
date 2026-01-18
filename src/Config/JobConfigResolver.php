@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Config;
 
+use App\Job\Job;
 use App\Message\GenericMessage;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;

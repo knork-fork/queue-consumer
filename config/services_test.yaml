@@ -1,4 +1,4 @@
 services:
-    App\Message\JobValidationProbeInterface: '@App\Message\JobValidationProbe'
+    App\Job\JobValidationProbeInterface: '@App\Job\JobValidationProbe'
 
-    App\Message\JobValidationProbe: ~
+    App\Job\JobValidationProbe: ~

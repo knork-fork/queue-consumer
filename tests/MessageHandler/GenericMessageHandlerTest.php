@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\MessageHandler;
 
+use App\Job\JobValidationProbe;
 use App\Message\GenericMessage;
-use App\Message\JobValidationProbe;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;

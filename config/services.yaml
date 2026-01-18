@@ -27,6 +27,6 @@ services:
             $env: '%kernel.environment%'
 
     # Default implementations for interfaces
-    App\Message\JobValidationProbeInterface: '@App\Message\NullJobValidationProbe'
+    App\Job\JobValidationProbeInterface: '@App\Job\NullJobValidationProbe'
 
-    App\Message\NullJobValidationProbe: ~
+    App\Job\NullJobValidationProbe: ~
