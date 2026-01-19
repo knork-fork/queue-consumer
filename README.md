@@ -22,6 +22,7 @@ Jobs are defined via YAML configuration and dispatched by **another container/se
   - builds an HTTP request (method, query params, JSON body)
   - executes the request
   - checks the expected success status code
+  - optionally calls callback jobs on success or failure
 - Jobs are **configuration-only** and **gitignored**.
 
 ---

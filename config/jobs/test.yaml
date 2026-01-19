@@ -9,6 +9,7 @@ jobs:
         log_suffix: test
         success:
             status_code: 200
+        # deliberately no 'callbacks' to test default null handling
 
     test-job-post-mixed-inputs:
         request:
@@ -20,6 +21,7 @@ jobs:
         log_suffix: test
         success:
             status_code: 200
+        callbacks: null
 
     test-job-wrong-status-code:
         request:
@@ -32,3 +34,136 @@ jobs:
         success:
             # Dummy response will always return 200, so we set expected status code to 201 to trigger failure
             status_code: 201
+        callbacks: null
+
+    test-job-with-callbacks:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: test-job-no-input
+            on_success: test-job-no-input
+            on_fail: null
+
+    test-job-with-onfail-callback:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 201
+        callbacks:
+            on_start: null
+            on_success: null
+            on_fail: test-job-no-input
+    
+    test-job-with-broken-callbacks:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: non-existent-job
+            on_success: null
+            on_fail: null
+
+    test-job-with-failing-onstart:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: test-job-wrong-status-code
+            on_success: null
+            on_fail: test-job-no-input
+    
+    test-job-with-failing-onsuccess:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: null
+            on_success: test-job-wrong-status-code
+            on_fail: test-job-no-input
+
+    test-job-with-failing-onfail:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 201 # Trigger failure
+        callbacks:
+            on_start: null
+            on_success: null
+            on_fail: test-job-wrong-status-code
+    
+    test-job-chain-start:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: null
+            on_success: test-job-chain-middle
+            on_fail: null
+    
+    test-job-chain-middle:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks:
+            on_start: null
+            on_success: test-job-chain-end
+            on_fail: null
+    
+    test-job-chain-end:
+        request:
+            method: GET
+            url: http://queue-consumer-dummy-response:5678
+            query_url_from: []
+            json_body_from: []
+            required: []
+        log_suffix: test
+        success:
+            status_code: 200
+        callbacks: null

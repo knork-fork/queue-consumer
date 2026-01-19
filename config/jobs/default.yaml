@@ -16,3 +16,4 @@ jobs:
         success:
             # expected HTTP status code for a successful job
             status_code: 200
+        callbacks: null

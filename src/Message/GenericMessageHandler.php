@@ -26,6 +26,7 @@ final class GenericMessageHandler
             $this->probe->failed($m->jobName, $m->payload, 'Job config not found');
             Logger::error("Invalid Generic Message: jobName={$m->jobName}, payload=" . json_encode($m->payload), 'default');
 
+            // No exception re-throwing to prevent message retrying
             return;
         }
 
@@ -33,6 +34,17 @@ final class GenericMessageHandler
             $this->probe->failed($m->jobName, $m->payload, 'Payload does not match job config');
             Logger::error("Invalid Generic Message: jobName={$m->jobName}, payload=" . json_encode($m->payload), $job->logSuffix);
 
+            // No exception re-throwing to prevent message retrying
+            return;
+        }
+
+        try {
+            $job->loadCallbacks($this->resolver);
+        } catch (RuntimeException $e) {
+            $this->probe->failed($m->jobName, $m->payload, 'Failed to load job callbacks: ' . $e->getMessage());
+            Logger::error("Failed to load job callbacks: jobName={$m->jobName}, payload=" . json_encode($m->payload) . ', error=' . $e->getMessage(), $job->logSuffix);
+
+            // No exception re-throwing to prevent message retrying
             return;
         }
 

@@ -84,6 +84,19 @@ final class JobConfigResolver
                     throw new RuntimeException("Invalid request config for job '{$jobName}' in file: {$file}");
                 }
 
+                $onStartCallbackName = $onSuccessCallbackName = $onFailCallbackName = null;
+                if (\is_array($jobConfig['callbacks'] ?? null)) {
+                    $onStartCallbackName = isset($jobConfig['callbacks']['on_start']) && \is_string($jobConfig['callbacks']['on_start'])
+                        ? $jobConfig['callbacks']['on_start']
+                        : null;
+                    $onSuccessCallbackName = isset($jobConfig['callbacks']['on_success']) && \is_string($jobConfig['callbacks']['on_success'])
+                        ? $jobConfig['callbacks']['on_success']
+                        : null;
+                    $onFailCallbackName = isset($jobConfig['callbacks']['on_fail']) && \is_string($jobConfig['callbacks']['on_fail'])
+                        ? $jobConfig['callbacks']['on_fail']
+                        : null;
+                }
+
                 $jobsFromFile[$jobName] = new Job(
                     name: (string) $jobName,
                     method: $method,
@@ -96,6 +109,9 @@ final class JobConfigResolver
                     requiredInputKeys: $requiredInputKeys,
                     logSuffix: $jobConfig['log_suffix'] ?? $jobName,
                     successStatusCode: $jobConfig['success']['status_code'] ?? 200,
+                    onStartCallbackName: $onStartCallbackName,
+                    onSuccessCallbackName: $onSuccessCallbackName,
+                    onFailCallbackName: $onFailCallbackName,
                 );
             }
 

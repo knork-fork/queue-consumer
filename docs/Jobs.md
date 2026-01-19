@@ -94,6 +94,7 @@ jobs:
         log_suffix: my_custom_job
         success:
             status_code: 200
+        callbacks: null
 ```
 
 ---
@@ -127,6 +128,95 @@ The consumer remains generic:
 * checks `success.status_code`
 
 No job code is added to the consumer. Only YAML changes.
+
+---
+
+## Callback jobs
+
+Callback jobs can be defined to run on job start, success, or failure, and are run synchronously with the main job as part of the same worker process.
+Callback jobs can be chained: each callback job can have its own callbacks.
+
+Most notable use case for callbacks is updating job status in an external system, so that producer or other services can track job progress, without lending ownership or access to the database to the consumer.
+
+Example of a job chain that updates job status with callbacks (producer creates a job entry in the db and passes `job_id` in payload to `main-job`):
+```yaml
+jobs:
+    main-job:
+        request:
+            method: POST
+            url: http://my-service:8080/do-stuff
+            query_url_from: []
+            json_body_from: ["job_id"]
+            required: ["job_id"]
+        log_suffix: whatever_domain
+        success:
+            status_code: 200
+        callbacks:
+            on_start: main-job-status-doing
+            on_success: main-job-status-done
+            on_fail: null
+    
+    main-job-status-doing:
+        request:
+            method: POST
+            url: http://my-service:8080/job-status/set-doing
+            query_url_from: []
+            json_body_from: ["job_id"]
+            required: ["job_id"]
+        log_suffix: whatever_domain
+        success:
+            status_code: 200
+        callbacks: null
+    
+    main-job-status-done:
+        request:
+            method: POST
+            url: http://my-service:8080/job-status/set-done
+            query_url_from: []
+            json_body_from: ["job_id"]
+            required: ["job_id"]
+        log_suffix: whatever_domain
+        success:
+            status_code: 200
+        callbacks: null
+```
+
+Note the command-style status endpoints - CRUD mutations on a single endpoint are discouraged in favor of explicit commands for state transitions.
+
+Also note order of execution for the above example:
+1. `main-job-status-doing` (onStart)
+2. `main-job`
+3. `main-job-status-done` (onSuccess)
+
+##### OnFail callback
+
+In case of a failure, job handler will automatically add `__error_message` key to the payload, containing the error message from the failed main job. 
+If error key is specified in `json_body_from` list it will be passed to the callback job in the payload, allowing the onFail callback to update both the status and the error message in the external system.
+
+OnFail callback **will execute** if **any callback or main job** fails - if for example main job has onStart and onFail callbacks, and onStart also has its own onFail callback, and onStart execution fails, then onStart's onFail will get called first after which main thread's onFail will also get called.
+
+Example of onFail callback job:
+```yaml
+jobs:
+    main-job:
+    ...
+        callbacks:
+            on_fail: main-job-status-failed
+
+    main-job-status-failed:
+        request:
+            method: POST
+            url: http://my-service:8080/job-status/set-failed
+            query_url_from: []
+            json_body_from: ["job_id", "__error_message"]
+            required: ["job_id"]
+        log_suffix: whatever_domain
+        success:
+            status_code: 200
+        callbacks: null
+```
+
+---
 
 ## Deployment tips
 

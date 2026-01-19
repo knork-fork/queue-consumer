@@ -40,6 +40,9 @@ final class JobConfigResolverTest extends TestCase
         self::assertSame([], $job->requiredInputKeys);
         self::assertSame('test', $job->logSuffix);
         self::assertSame(200, $job->successStatusCode);
+        self::assertNull($job->onStartCallbackName);
+        self::assertNull($job->onSuccessCallbackName);
+        self::assertNull($job->onFailCallbackName);
     }
 
     public function testGetJobByNameForJobWithInputs(): void
@@ -53,6 +56,25 @@ final class JobConfigResolverTest extends TestCase
         self::assertSame(['query_url_key', 'json_1', 'json_2'], $job->requiredInputKeys);
         self::assertSame('test', $job->logSuffix);
         self::assertSame(200, $job->successStatusCode);
+        self::assertNull($job->onStartCallbackName);
+        self::assertNull($job->onSuccessCallbackName);
+        self::assertNull($job->onFailCallbackName);
+    }
+
+    public function testGetJobByNameForJobWithCallbacks(): void
+    {
+        $job = $this->jobConfigResolver->getJobByName('test-job-with-callbacks');
+        self::assertSame('test-job-with-callbacks', $job->name);
+        self::assertSame('GET', $job->method);
+        self::assertSame('http://queue-consumer-dummy-response:5678', $job->url);
+        self::assertSame([], $job->queryUrlKeys);
+        self::assertSame([], $job->jsonBodyKeys);
+        self::assertSame([], $job->requiredInputKeys);
+        self::assertSame('test', $job->logSuffix);
+        self::assertSame(200, $job->successStatusCode);
+        self::assertSame('test-job-no-input', $job->onStartCallbackName);
+        self::assertSame('test-job-no-input', $job->onSuccessCallbackName);
+        self::assertNull($job->onFailCallbackName);
     }
 
     /**
