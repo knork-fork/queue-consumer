@@ -87,6 +87,8 @@ final class JobConfigResolverTest extends TestCase
                 'json_2' => 'value4',
                 'json_3' => 'value5',
             ]],
+            // Too many inputs - acceptable, because later callback might use them
+            ['test-job-no-input', ['unexpected_key' => 'value']],
         ];
     }
 
@@ -111,8 +113,6 @@ final class JobConfigResolverTest extends TestCase
         return [
             // Invalid job name
             ['undefined-job-name', []],
-            // Too many inputs
-            ['test-job-no-input', ['unexpected_key' => 'value']],
             // Missing inputs
             ['test-job-post-mixed-inputs', []],
             // Missing one required input

@@ -45,14 +45,6 @@ final class JobConfigResolver
             }
         }
 
-        // Check if all payload keys are sent in either query URL or JSON body
-        foreach (array_keys($payload) as $payloadKey) {
-            if (!\in_array($payloadKey, $job->queryUrlKeys, true)
-                && !\in_array($payloadKey, $job->jsonBodyKeys, true)) {
-                return false;
-            }
-        }
-
         return true;
     }
 
