@@ -32,6 +32,10 @@ jobs:
         log_suffix: some_short_name
         success:
             status_code: 200
+        callbacks:
+            on_start: <job-name>|null
+            on_success: <job-name>|null
+            on_fail: <job-name>|null
 ```
 
 ### Field meanings
